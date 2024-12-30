@@ -97,7 +97,7 @@ export default function WizardPage() {
 							},
 							body: JSON.stringify({
 									formData,
-                                    createdAt: currentTimestamp,
+                  createdAt: currentTimestamp,
 							}),
 					});
 	
