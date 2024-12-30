@@ -5,3 +5,7 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+module.exports = {
+  reactStrictMode: false,  // double clicking buttons was happening.
+};

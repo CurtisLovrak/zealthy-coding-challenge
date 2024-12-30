@@ -5,60 +5,54 @@ import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
     const router = useRouter();
-    const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number | string }>({
-        // Store selections as {element: page}, where "none", 2, and 3 are valid values
-        aboutMe: "none",
-        address: "none",
-        birthdate: "none",
-    });
+    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: { [key: string]: boolean } }>({});
 
-    // Load selected options from localStorage on mount
     useEffect(() => {
         const savedOptions = localStorage.getItem("admin-selected-options");
         if (savedOptions) {
             setSelectedOptions(JSON.parse(savedOptions));
         } else {
             setSelectedOptions({
-                aboutMe: 2, // Default page for aboutMe (page 2)
-                address: 2, // Default page for address (page 2)
-                birthdate: 3, // Default page for birthdate (page 3)
+                2: { aboutMe: false, address: false, birthdate: false },
+                3: { aboutMe: false, address: false, birthdate: false },
             });
         }
     }, []);
 
     const handleCheckboxChange = (option: string, page: number) => {
-        setSelectedOptions((prev) => {
-            const updatedOptions = { ...prev };
-
-            // Toggle between pages or deselect
-            if (updatedOptions[option] === page) {
-                updatedOptions[option] = "none"; // Deselect
-            } else {
-                updatedOptions[option] = page; // Select the page
+        setSelectedOptions((prevSelectedOptions) => {
+          const updatedOptions = { ...prevSelectedOptions };
+      
+          const isCurrentlyChecked = updatedOptions[page][option];
+      
+          if (isCurrentlyChecked) {
+            updatedOptions[page][option] = false;
+          } else {
+            updatedOptions[page][option] = true;
+      
+            const otherPage = page === 2 ? 3 : 2;
+            
+            if (updatedOptions[otherPage][option]) {
+              updatedOptions[otherPage][option] = false;
             }
-
-            // Ensure at least one element is selected for both page 2 and page 3
-            if (page === 2) {
-                const page2Selected = Object.values(updatedOptions).filter(val => val === 2).length;
-                if (page2Selected === 0) {
-                    updatedOptions[option] = 2; // Revert to page 2 if no element is selected for page 2
-                }
-            } else if (page === 3) {
-                const page3Selected = Object.values(updatedOptions).filter(val => val === 3).length;
-                if (page3Selected === 0) {
-                    updatedOptions[option] = 3; // Revert to page 3 if no element is selected for page 3
-                }
-            }
-
-            return updatedOptions;
+          }
+          return updatedOptions;
         });
-    };
-
+      };
+    
     const handleSave = () => {
         localStorage.setItem("admin-selected-options", JSON.stringify(selectedOptions));
         router.push("/");
     };
 
+    const isSaveButtonDisabled = () => {
+        const page2FieldsSelected = Object.values(selectedOptions[2] || {}).filter(Boolean).length;
+        const page3FieldsSelected = Object.values(selectedOptions[3] || {}).filter(Boolean).length;
+    
+        // Disable the button if any page has no fields selected or has more than 2 fields selected
+        return !(page2FieldsSelected >= 1 && page2FieldsSelected <= 2) || !(page3FieldsSelected >= 1 && page3FieldsSelected <= 2);
+    };
+    
     return (
         <div>
             <h1>Admin Page</h1>
@@ -69,7 +63,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.aboutMe === 2}
+                        checked={selectedOptions[2]?.aboutMe || false}
                         onChange={() => handleCheckboxChange("aboutMe", 2)}
                     />
                     Present on Page 2
@@ -77,7 +71,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.aboutMe === 3}
+                        checked={selectedOptions[3]?.aboutMe || false}
                         onChange={() => handleCheckboxChange("aboutMe", 3)}
                     />
                     Present on Page 3
@@ -89,7 +83,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.address === 2}
+                        checked={selectedOptions[2]?.address || false}
                         onChange={() => handleCheckboxChange("address", 2)}
                     />
                     Present on Page 2
@@ -97,7 +91,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.address === 3}
+                        checked={selectedOptions[3]?.address || false}
                         onChange={() => handleCheckboxChange("address", 3)}
                     />
                     Present on Page 3
@@ -109,7 +103,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.birthdate === 2}
+                        checked={selectedOptions[2]?.birthdate || false}
                         onChange={() => handleCheckboxChange("birthdate", 2)}
                     />
                     Present on Page 2
@@ -117,7 +111,7 @@ export default function AdminPage() {
                 <label>
                     <input
                         type="checkbox"
-                        checked={selectedOptions.birthdate === 3}
+                        checked={selectedOptions[3]?.birthdate || false}
                         onChange={() => handleCheckboxChange("birthdate", 3)}
                     />
                     Present on Page 3
@@ -126,137 +120,19 @@ export default function AdminPage() {
 
             <button
                 onClick={handleSave}
-                disabled={
-                    Object.values(selectedOptions).filter(val => val !== "none").length < 2
-                }
+                disabled={isSaveButtonDisabled()}
                 style={{
                     marginTop: "20px",
                     padding: "10px 20px",
-                    backgroundColor: Object.values(selectedOptions).filter(val => val !== "none").length >= 2 ? "blue" : "gray",
+                    backgroundColor: isSaveButtonDisabled() ? "gray" : "blue",
                     color: "white",
                     border: "none",
-                    cursor: Object.values(selectedOptions).filter(val => val !== "none").length >= 2 ? "pointer" : "not-allowed",
+                    cursor: isSaveButtonDisabled() ? "not-allowed" : "pointer",
                 }}
             >
                 Save Options
             </button>
-            {/* <button
-                onClick={handleSave}
-                disabled={
-                    Object.values(selectedOptions).filter(val => val !== "none").length < 2
-                }
-                style={{
-                    marginTop: "20px",
-                    padding: "10px 20px",
-                    backgroundColor:
-                        Object.values(selectedOptions).filter(val => val !== "none").length >= 2
-                        ? "blue"
-                        : "gray",
-                    color: "white",
-                    border: "none",
-                    cursor:
-                        Object.values(selectedOptions).filter(val => val !== "none").length >= 2
-                        ? "pointer"
-                        : "not-allowed",
-                }}
-            >
-                Save Options
-            </button> */}
             <pre>{JSON.stringify(selectedOptions, null, 2)}</pre>
         </div>
     );
 }
-
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import { useRouter } from "next/navigation";
-
-// export default function AdminPage() {
-//     const router = useRouter();
-//     const [selectedOptions, setSelectedOptions] = useState<string[]>([]); // Default to empty
-
-//     // Load selected options from localStorage on mount
-//     useEffect(() => {
-//         const savedOptions = localStorage.getItem("admin-selected-options");
-//         if (savedOptions) {
-//             setSelectedOptions(JSON.parse(savedOptions));
-//         } else {
-//             // Set default selections if nothing is saved
-//             setSelectedOptions(["aboutMe", "address"]);
-//         }
-//     }, []);
-
-//     const handleCheckboxChange = (option: string) => {
-//         setSelectedOptions((prev) => {
-//             if (prev.includes(option)) {
-//                 return prev.filter((item) => item !== option);
-//             } else {
-//                 return [...prev, option];
-//             }
-//         });
-//     };
-
-//     const handleSave = () => {
-//         localStorage.setItem("admin-selected-options", JSON.stringify(selectedOptions));
-//         router.push("/");
-//     };
-
-//     return (
-//         <div>
-//             <h1>Admin Page</h1>
-//             <p>Select exactly 2 options for the onboarding flow:</p>
-
-//             <div>
-//                 <label>
-//                     <input
-//                         type="checkbox"
-//                         value="aboutMe"
-//                         checked={selectedOptions.includes("aboutMe")}
-//                         onChange={() => handleCheckboxChange("aboutMe")}
-//                     />
-//                     About Me Section
-//                 </label>
-//             </div>
-
-//             <div>
-//                 <label>
-//                     <input
-//                         type="checkbox"
-//                         value="address"
-//                         checked={selectedOptions.includes("address")}
-//                         onChange={() => handleCheckboxChange("address")}
-//                     />
-//                     Address Collection
-//                 </label>
-//             </div>
-
-//             <div>
-//                 <label>
-//                     <input
-//                         type="checkbox"
-//                         value="birthdate"
-//                         checked={selectedOptions.includes("birthdate")}
-//                         onChange={() => handleCheckboxChange("birthdate")}
-//                     />
-//                     Birthdate Selection
-//                 </label>
-//             </div>
-
-//             <button
-//                 onClick={handleSave}
-//                 disabled={selectedOptions.length !== 2}
-//                 style={{
-//                     marginTop: "20px",
-//                     padding: "10px 20px",
-//                     backgroundColor: selectedOptions.length === 2 ? "blue" : "gray",
-//                     color: "white",
-//                     border: "none",
-//                     cursor: selectedOptions.length === 2 ? "pointer" : "not-allowed",
-//                 }}
-//             >
-//                 Save Options
-//             </button>
-//         </div>
-//     );
-// }
