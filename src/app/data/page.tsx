@@ -10,11 +10,15 @@ interface FormData {
     zip: string;
     bio: string;
     birthdate: string;
-    password: string; // Including password if needed
+    password: string;
 }
 
+interface FormDataEntry {
+    formData: FormData;
+  }
+
 export default function DataPage() {
-    const [formData, setFormData] = useState<FormData | null>(null); // Store single form submission object
+    const [formData, setFormData] = useState<FormDataEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>("");
 
@@ -22,12 +26,11 @@ export default function DataPage() {
         const fetchFormData = async () => {
             try {
                 const response = await fetch("http://localhost:5000/api/submit-form");
-                const json = await response.json(); // Parse the response JSON
+                const json = await response.json();
 
                 if (response.ok) {
-                    // Assuming json.formData is the object
-                    if (json.formData) {
-                        setFormData(json.formData.formData); // Set the single form submission object
+                    if (json.data) {
+                        setFormData(json.data);
                     } else {
                         setError("No form data found.");
                     }
@@ -55,27 +58,26 @@ export default function DataPage() {
 
     return (
         <div>
-            <h1>Previous Submission</h1>
-            {!formData ? (
-                <p>No submission found.</p>
-            ) : (
-                <div>
-                    <div>
-                        <strong>Email:</strong> {formData.email}
-                    </div>
-                    <div>
-                        <strong>Address:</strong> {formData.street}, {formData.city}, {formData.state}, {formData.zip}
-                    </div>
-                    <div>
-                        <strong>Bio:</strong> {formData.bio}
-                    </div>
-                    <div>
-                        <strong>Birthdate:</strong> {formData.birthdate}
-                    </div>
-                    <hr />
-                </div>
-            )}
-            {/* For debugging, show the raw JSON data */}
-        </div>
+  <h1>Previous Submissions</h1>
+  {formData.length === 0 ? (
+    <p>No submissions found.</p>
+  ) : (
+    <div className="grid-container">
+      {formData.map((entry, index) => {
+        return (
+          <div key={index} className="grid-item">
+            {/* Accessing formData correctly */}
+            <div><strong>Email:</strong> {entry.formData.email || "N/A"}</div>
+            <div><strong>Address:</strong> {entry.formData.street || "N/A"}, {entry.formData.city || "N/A"}, {entry.formData.state || "N/A"}, {entry.formData.zip || "N/A"}</div>
+            <div><strong>Bio:</strong> {entry.formData.bio || "N/A"}</div>
+            <div><strong>Birthdate:</strong> {entry.formData.birthdate || "N/A"}</div>
+            <hr />
+          </div>
+        );
+      })}
+    </div>
+  )}
+</div>
+
     );
 }

@@ -96,8 +96,7 @@ export default function WizardPage() {
 									"Content-Type": "application/json",
 							},
 							body: JSON.stringify({
-									formData, // form data that you want to submit
-									// selectedSteps, // if applicable
+									formData,
                                     createdAt: currentTimestamp,
 							}),
 					});
@@ -108,7 +107,6 @@ export default function WizardPage() {
 							console.error("Error submitting form:", result.message);
 					} else {
 							console.log("Form submitted successfully:", result.message);
-							// Clear form data after successful submission
 							setFormData({
 									email: "",
 									password: "",
@@ -119,9 +117,7 @@ export default function WizardPage() {
 									birthdate: "",
 									bio: "",
 							});
-							// Optionally, clear selected steps if necessary
 							setSelectedSteps({});
-							// Reset to step 1
 							setStep(1);
 							localStorage.setItem("wizard-step", "1");
 					}
