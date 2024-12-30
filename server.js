@@ -85,18 +85,43 @@ app.post("/api/submit-form", async (req, res) => {
 //       res.status(500).json({ message: "Failed to retrieve form data" });
 //   }
 // });
+// app.get("/api/submit-form", async (req, res) => {
+//   try {
+//       const database = client.db("FormPageDB");
+//       const collection = database.collection("data");
+
+//       const data = await collection.find({}).toArray(); // Fetch all records
+//       if (data.length > 0) {
+//           // Return the data nested under 'data' for consistency
+//           res.status(200).json({
+//               data: {
+//                   formData: formData.map(doc => doc.formData), // Assuming formData is inside each document
+//                   selectedSteps: formData.map(doc => doc.selectedSteps), // Same for selectedSteps
+//               }
+//           });
+//       } else {
+//           res.status(404).json({ message: "No form data found" });
+//       }
+//   } catch (error) {
+//       console.error("Error retrieving form data:", error);
+//       res.status(500).json({ message: "Failed to retrieve form data" });
+//   }
+// });
+
 app.get("/api/submit-form", async (req, res) => {
   try {
       const database = client.db("FormPageDB");
       const collection = database.collection("formData");
 
-      const formData = await collection.find({}).toArray(); // Fetch all records
+      // Fetch all records
+      const formData = await collection.find({}).toArray(); 
+
       if (formData.length > 0) {
-          // Return the data nested under 'data' for consistency
+          // Format the response by extracting formData and selectedSteps from each record
           res.status(200).json({
               data: {
-                  formData: formData.map(doc => doc.formData), // Assuming formData is inside each document
-                  selectedSteps: formData.map(doc => doc.selectedSteps), // Same for selectedSteps
+                  formData: formData.map(doc => doc.formData), // Extract formData from each document
+                  selectedSteps: formData.map(doc => doc.selectedSteps), // Extract selectedSteps from each document
               }
           });
       } else {
@@ -107,7 +132,6 @@ app.get("/api/submit-form", async (req, res) => {
       res.status(500).json({ message: "Failed to retrieve form data" });
   }
 });
-
 
 
 
