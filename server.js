@@ -68,73 +68,34 @@ app.post("/api/submit-form", async (req, res) => {
   }
 });
 
-// Get form data and selected steps
-// app.get("/api/submit-form", async (req, res) => {
-//   try {
-//       const database = client.db("FormPageDB");
-//       const collection = database.collection("formData");
-
-//       const formData = await collection.find({}).toArray(); // Fetch all records
-//       if (formData.length > 0) {
-//           res.status(200).json({ formData });
-//       } else {
-//           res.status(404).json({ message: "No form data found" });
-//       }
-//   } catch (error) {
-//       console.error("Error retrieving form data:", error);
-//       res.status(500).json({ message: "Failed to retrieve form data" });
-//   }
-// });
-// app.get("/api/submit-form", async (req, res) => {
-//   try {
-//       const database = client.db("FormPageDB");
-//       const collection = database.collection("data");
-
-//       const data = await collection.find({}).toArray(); // Fetch all records
-//       if (data.length > 0) {
-//           // Return the data nested under 'data' for consistency
-//           res.status(200).json({
-//               data: {
-//                   formData: formData.map(doc => doc.formData), // Assuming formData is inside each document
-//                   selectedSteps: formData.map(doc => doc.selectedSteps), // Same for selectedSteps
-//               }
-//           });
-//       } else {
-//           res.status(404).json({ message: "No form data found" });
-//       }
-//   } catch (error) {
-//       console.error("Error retrieving form data:", error);
-//       res.status(500).json({ message: "Failed to retrieve form data" });
-//   }
-// });
-
 app.get("/api/submit-form", async (req, res) => {
   try {
-      const database = client.db("FormPageDB");
-      const collection = database.collection("formData");
+    const database = client.db("FormPageDB"); // Your database name
+    const collection = database.collection("formData"); // Your collection name
 
-      // Fetch all records
-      const formData = await collection.find({}).toArray(); 
+    // Query the most recent 100 records and sort by 'createdAt'
+    const formData = await collection
+      .find() // You can add a query filter here if needed (e.g., { status: 'submitted' })
+      .sort({ createdAt: -1 }) // Sort by 'createdAt' in descending order (most recent first)
+      .limit(100) // Limit the results to 100
+      .toArray();
 
-      if (formData.length > 0) {
-          // Format the response by extracting formData and selectedSteps from each record
-          res.status(200).json({
-              data: {
-                  formData: formData.map(doc => doc.formData), // Extract formData from each document
-                  selectedSteps: formData.map(doc => doc.selectedSteps), // Extract selectedSteps from each document
-              }
-          });
-      } else {
-          res.status(404).json({ message: "No form data found" });
-      }
+    if (formData.length > 0) {
+      // Format the response by extracting 'formData' and other fields as needed
+      res.status(200).json({
+        data: formData.map(doc => ({
+          formData: doc.formData, // Ensure 'formData' exists in your MongoDB document
+          // selectedSteps: doc.selectedSteps, // Uncomment if needed
+        }))
+      });
+    } else {
+      res.status(404).json({ message: "No form data found" });
+    }
   } catch (error) {
-      console.error("Error retrieving form data:", error);
-      res.status(500).json({ message: "Failed to retrieve form data" });
+    console.error("Error retrieving form data:", error);
+    res.status(500).json({ message: "Failed to retrieve form data" });
   }
 });
-
-
-
 
 app.listen(port, async () => {
   console.log(`Server is running on http://localhost:${port}`);

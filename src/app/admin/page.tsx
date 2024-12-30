@@ -13,8 +13,8 @@ export default function AdminPage() {
             setSelectedOptions(JSON.parse(savedOptions));
         } else {
             setSelectedOptions({
-                2: { aboutMe: false, address: false, birthdate: false },
-                3: { aboutMe: false, address: false, birthdate: false },
+                2: { aboutMe: false, address: true, birthdate: false },
+                3: { aboutMe: false, address: false, birthdate: true },
             });
         }
     }, []);

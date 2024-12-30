@@ -72,34 +72,64 @@ export default function WizardPage() {
                 return !formData.bio;
             }
         }
+				if (step === 3) {
+						if (selectedSteps[3]?.address) {
+								return !formData.street || !formData.city || !formData.state || !formData.zip;
+						}
+						if (selectedSteps[3]?.birthdate) {
+								return !formData.birthdate;
+						}
+						if (selectedSteps[3]?.aboutMe) {
+								return !formData.bio;
+						}
+				}
 
-        return false; // Step 3 doesn't disable the "Next" button; it's handled by "Submit"
+        return false;
     };
 
-    const handleSubmit = async () => {
-        try {
-            const response = await fetch("http://localhost:5000/api/submit-form", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    formData, // form data that you want to submit
-                    selectedSteps, // if applicable
-                }),
-            });
-    
-            const result = await response.json();
-    
-            if (!response.ok) {
-                console.error("Error submitting form:", result.message);
-            } else {
-                console.log("Form submitted successfully:", result.message);
-            }
-        } catch (error) {
-            console.error("Error with form submission:", error);
-        }
-    };
+		const handleSubmit = async () => {
+			try {
+                const currentTimestamp = new Date().toISOString();
+					const response = await fetch("http://localhost:5000/api/submit-form", {
+							method: "POST",
+							headers: {
+									"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+									formData, // form data that you want to submit
+									// selectedSteps, // if applicable
+                                    createdAt: currentTimestamp,
+							}),
+					});
+	
+					const result = await response.json();
+	
+					if (!response.ok) {
+							console.error("Error submitting form:", result.message);
+					} else {
+							console.log("Form submitted successfully:", result.message);
+							// Clear form data after successful submission
+							setFormData({
+									email: "",
+									password: "",
+									street: "",
+									city: "",
+									state: "",
+									zip: "",
+									birthdate: "",
+									bio: "",
+							});
+							// Optionally, clear selected steps if necessary
+							setSelectedSteps({});
+							// Reset to step 1
+							setStep(1);
+							localStorage.setItem("wizard-step", "1");
+					}
+			} catch (error) {
+					console.error("Error with form submission:", error);
+			}
+	};
+	
 
     return (
         <div>
@@ -188,38 +218,57 @@ export default function WizardPage() {
                 <div>
                     <h3>Final Step: Review and Submit</h3>
                     <form>
-                        <div>
-                            <label htmlFor="bio">Bio:</label>
-                            <textarea
-                                name="bio"
-                                placeholder="Tell us about yourself..."
-                                style={{ width: "100%", height: "100px" }}
-                                value={formData.bio}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="street">Street:</label>
-                            <input type="text" id="street" name="street" value={formData.street} onChange={handleInputChange} />
-                        </div>
-                        <div>
-                            <label htmlFor="city">City:</label>
-                            <input type="text" id="city" name="city" value={formData.city} onChange={handleInputChange} />
-                        </div>
-                        <div>
-                            <label htmlFor="state">State:</label>
-                            <input type="text" id="state" name="state" value={formData.state} onChange={handleInputChange} />
-                        </div>
-                        <div>
-                            <label htmlFor="zip">ZIP:</label>
-                            <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleInputChange} />
-                        </div>
-                        <div>
-                            <label htmlFor="birthdate">Birthdate:</label>
-                            <input type="date" id="birthdate" name="birthdate" value={formData.birthdate} onChange={handleInputChange} />
-                        </div>
+                        {selectedSteps[3]?.aboutMe && (
+                            <div>
+                                <label htmlFor="bio">Bio:</label>
+                                <textarea
+                                    name="bio"
+                                    placeholder="Tell us about yourself..."
+                                    style={{ width: "100%", height: "100px" }}
+                                    value={formData.bio}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        )}
+                        {selectedSteps[3]?.address && (
+                            <>
+                                <div>
+                                    <label htmlFor="street">Street:</label>
+                                    <input type="text" id="street" name="street" value={formData.street} onChange={handleInputChange} />
+                                </div>
+                                <div>
+                                    <label htmlFor="city">City:</label>
+                                    <input type="text" id="city" name="city" value={formData.city} onChange={handleInputChange} />
+                                </div>
+                                <div>
+                                    <label htmlFor="state">State:</label>
+                                    <input type="text" id="state" name="state" value={formData.state} onChange={handleInputChange} />
+                                </div>
+                                <div>
+                                    <label htmlFor="zip">ZIP:</label>
+                                    <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleInputChange} />
+                                </div>
+                            </>
+                        )}
+                        {selectedSteps[3]?.birthdate && (
+                            <div>
+                                <label htmlFor="birthdate">Birthdate:</label>
+                                <input type="date" id="birthdate" name="birthdate" value={formData.birthdate} onChange={handleInputChange} />
+                            </div>
+                        )}
                     </form>
-                    <button onClick={handleSubmit} style={{ padding: "10px 20px", marginTop: "20px", backgroundColor: "green", color: "white", border: "none" }}>
+                    <button
+												disabled={isNextButtonDisabled()}
+                        onClick={handleSubmit}
+                        style={{
+                            padding: "10px 20px",
+                            marginTop: "20px",
+                            backgroundColor: isNextButtonDisabled() ? "gray" : "green",
+                            color: "white",
+                            border: "none",
+														cursor: isNextButtonDisabled() ? "not-allowed" : "pointer"
+                        }}
+                    >
                         Submit
                     </button>
                 </div>
