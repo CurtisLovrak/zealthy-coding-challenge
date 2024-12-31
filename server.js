@@ -6,10 +6,6 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 const app = express();
 export const port = process.env.PORT || 5000;
 
-// export const endpoint = {
-//   submitForm: "/api/submit-form",
-// };
-
 app.use(cors());
 app.use(bodyParser.json());
 

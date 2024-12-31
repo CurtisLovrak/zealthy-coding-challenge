@@ -69,15 +69,13 @@ export default function WizardPage() {
 
   const handleSubmit = async () => {
     try {
-      const currentTimestamp = new Date().toISOString();  // Get the current timestamp
+      const currentTimestamp = new Date().toISOString();
       formData.createdAt = currentTimestamp; 
-      // const currentTimestamp = new Date().toISOString();
       const response = await fetch("http://localhost:5000/api/submit-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           formData
-          // createdAt: currentTimestamp 
         }),
       });
 
@@ -109,8 +107,8 @@ export default function WizardPage() {
   return (
     <div>
       <header>
-        <button onClick={() => router.push("/admin")}>Admin Controls</button>
-        <button onClick={() => router.push("/data")}>Data Submitted</button>
+        <button className="form-button" onClick={() => router.push("/admin")}>Admin Controls</button>
+        <button className="form-button" onClick={() => router.push("/data")}>Data Submitted</button>
       </header>
   
       <div className="progress-bar">
@@ -294,7 +292,7 @@ export default function WizardPage() {
             )}
           </form>
           <button
-            className="submit"
+            className="submit-button"
             disabled={isNextButtonDisabled()}
             onClick={handleSubmit}
             >
@@ -304,14 +302,14 @@ export default function WizardPage() {
         </div>
       )}
   
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+      <div className="button-container">
         {step !== 1 && (
-          <button onClick={handlePrev} disabled={step === 1}>
+          <button className="form-button" onClick={handlePrev} disabled={step === 1}>
             Previous
           </button>
         )}
         {step !== 3 && (
-          <button onClick={handleNext} disabled={isNextButtonDisabled()}>
+          <button className="form-button" onClick={handleNext} disabled={isNextButtonDisabled()}>
             Next
           </button>
         )}

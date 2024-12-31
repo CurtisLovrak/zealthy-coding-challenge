@@ -18,7 +18,6 @@ interface FormData {
 
 interface FormDataEntry {
   formData: FormData;
-  createdAt: string; // added the createdAt field
 }
 
 export default function DataPage() {
@@ -53,23 +52,6 @@ export default function DataPage() {
     fetchFormData();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/delete-form/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setFormData(formData.filter(entry => entry.formData.email !== id)); // Assuming email is unique as an identifier
-      } else {
-        setError("Failed to delete the record.");
-      }
-    } catch (error) {
-      console.error("Error deleting the record:", error);
-      setError("An error occurred while deleting the record.");
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -81,7 +63,7 @@ export default function DataPage() {
   return (
     <div>
       <header>
-        <button onClick={() => router.push("/")}>Back</button>
+        <button className="form-button" onClick={() => router.push("/")}>Back</button>
       </header>
 
       <h1>Previous Submissions</h1>
@@ -98,21 +80,17 @@ export default function DataPage() {
               <th>Bio</th>
               <th>Birthdate</th>
               <th>Created At</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {formData.map((entry, index) => (
               <tr key={index}>
-                <td>{entry.formData.email || "N/A"}</td>
-                <td>{entry.formData.password || "N/A"}</td>
-                <td>{`${entry.formData.street || "N/A"}, ${entry.formData.city || "N/A"}, ${entry.formData.state || "N/A"}, ${entry.formData.zip || "N/A"}`}</td>
-                <td>{entry.formData.bio || "N/A"}</td>
-                <td>{entry.formData.birthdate || "N/A"}</td>
+                <td>{entry.formData.email}</td>
+                <td>{entry.formData.password}</td>
+                <td>{`${entry.formData.street} ${entry.formData.city} ${entry.formData.state} ${entry.formData.zip}`}</td>
+                <td>{entry.formData.bio}</td>
+                <td>{entry.formData.birthdate}</td>
                 <td>{entry.formData.createdAt}</td>
-                <td>
-                  <button onClick={() => handleDelete(entry.formData.email)}>X</button>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -121,3 +99,4 @@ export default function DataPage() {
     </div>
   );
 }
+

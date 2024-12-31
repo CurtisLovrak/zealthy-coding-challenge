@@ -42,6 +42,7 @@ button:disabled {
   cursor: default;
 }
 
+/* Submit Button Styles */
 button.submit {
   background: var(--green);
   color: white;
@@ -50,6 +51,20 @@ button.submit {
 
 button.submit:hover {
   background: var(--green-hover);
+}
+
+button.submit:disabled {
+  background-color: #d3d3d3; /* Solid grey for disabled state */
+  color: #a9a9a9;  /* Light grey text */
+  border: 1px solid #d3d3d3; /* Matching grey border */
+  cursor: default;
+}
+
+/* Button Container */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
 .progress-bar {

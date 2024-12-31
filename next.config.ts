@@ -7,5 +7,5 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 
 module.exports = {
-  reactStrictMode: false,  // double clicking buttons was happening.
+  reactStrictMode: false,  // This was a solution I found to checkboxes getting double clicked in the admin section
 };

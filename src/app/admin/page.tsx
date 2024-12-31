@@ -118,7 +118,7 @@ export default function AdminPage() {
       </div>
   
       <button
-        className="button"
+        className="form-button"
         onClick={handleSave}
         disabled={isSaveButtonDisabled()}
       >
