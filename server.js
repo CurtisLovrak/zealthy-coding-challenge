@@ -90,17 +90,6 @@ app.get("/api/submit-form", async (req, res) => {
   }
 });
 
-app.delete("/api/delete-form/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    await FormDataModel.deleteOne({ email: id });
-
-    res.status(200).json({ message: "Record deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting record", error: error });
-  }
-});
-
 app.listen(port, async () => {
   console.log(`Server is running on http://localhost:${port}`);
   await connectToDatabase();
