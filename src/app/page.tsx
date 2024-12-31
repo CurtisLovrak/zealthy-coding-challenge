@@ -1,5 +1,7 @@
 "use client";
 
+import "./globals.css";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -99,17 +101,26 @@ export default function WizardPage() {
 
   return (
     <div>
-      <header style={{ display: "flex", justifyContent: "space-between", padding: "10px", backgroundColor: "#f0f0f0" }}>
-        <button onClick={() => router.push("/admin")} style={{ padding: "8px 12px", cursor: "pointer" }}>
-          Admin Controls
-        </button>
-        <button onClick={() => router.push("/data")} style={{ padding: "8px 12px", cursor: "pointer" }}>
-          Data Submitted
-        </button>
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "10px",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <button onClick={() => router.push("/admin")}>Admin Controls</button>
+        <button onClick={() => router.push("/data")}>Data Submitted</button>
       </header>
-
-      <h2>Step {step} of 3</h2>
-
+  
+      <div className="progress-bar">
+        <div className={`progress-step ${step >= 1 ? "active" : ""}`}>1</div>
+        <div className={`progress-line ${step > 1 ? "active" : ""}`}></div>
+        <div className={`progress-step ${step >= 2 ? "active" : ""}`}>2</div>
+        <div className={`progress-line ${step > 2 ? "active" : ""}`}></div>
+        <div className={`progress-step ${step === 3 ? "active" : ""}`}>3</div>
+      </div>
+  
       {step === 1 && (
         <div>
           <form>
@@ -138,7 +149,7 @@ export default function WizardPage() {
           </form>
         </div>
       )}
-
+  
       {step === 2 && (
         <div>
           {selectedSteps[2]?.aboutMe && (
@@ -154,31 +165,61 @@ export default function WizardPage() {
             <form>
               <div>
                 <label htmlFor="street">Street Address:</label>
-                <input type="text" id="street" name="street" value={formData.street} onChange={handleInputChange} />
+                <input
+                  type="text"
+                  id="street"
+                  name="street"
+                  value={formData.street}
+                  onChange={handleInputChange}
+                />
               </div>
               <div>
                 <label htmlFor="city">City:</label>
-                <input type="text" id="city" name="city" value={formData.city} onChange={handleInputChange} />
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                />
               </div>
               <div>
                 <label htmlFor="state">State:</label>
-                <input type="text" id="state" name="state" value={formData.state} onChange={handleInputChange} />
+                <input
+                  type="text"
+                  id="state"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleInputChange}
+                />
               </div>
               <div>
                 <label htmlFor="zip">ZIP Code:</label>
-                <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleInputChange} />
+                <input
+                  type="text"
+                  id="zip"
+                  name="zip"
+                  value={formData.zip}
+                  onChange={handleInputChange}
+                />
               </div>
             </form>
           )}
           {selectedSteps[2]?.birthdate && (
             <div>
               <label htmlFor="birthdate">Birthdate:</label>
-              <input type="date" id="birthdate" name="birthdate" value={formData.birthdate} onChange={handleInputChange} />
+              <input
+                type="date"
+                id="birthdate"
+                name="birthdate"
+                value={formData.birthdate}
+                onChange={handleInputChange}
+              />
             </div>
           )}
         </div>
       )}
-
+  
       {step === 3 && (
         <div>
           <h3>Final Step: Review and Submit</h3>
@@ -199,79 +240,83 @@ export default function WizardPage() {
               <>
                 <div>
                   <label htmlFor="street">Street:</label>
-                  <input type="text" id="street" name="street" value={formData.street} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="street"
+                    name="street"
+                    value={formData.street}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div>
                   <label htmlFor="city">City:</label>
-                  <input type="text" id="city" name="city" value={formData.city} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div>
                   <label htmlFor="state">State:</label>
-                  <input type="text" id="state" name="state" value={formData.state} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div>
                   <label htmlFor="zip">ZIP:</label>
-                  <input type="text" id="zip" name="zip" value={formData.zip} onChange={handleInputChange} />
+                  <input
+                    type="text"
+                    id="zip"
+                    name="zip"
+                    value={formData.zip}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </>
             )}
             {selectedSteps[3]?.birthdate && (
               <div>
                 <label htmlFor="birthdate">Birthdate:</label>
-                <input type="date" id="birthdate" name="birthdate" value={formData.birthdate} onChange={handleInputChange} />
+                <input
+                  type="date"
+                  id="birthdate"
+                  name="birthdate"
+                  value={formData.birthdate}
+                  onChange={handleInputChange}
+                />
               </div>
             )}
           </form>
           <button
+            className="submit"
             disabled={isNextButtonDisabled()}
             onClick={handleSubmit}
-            style={{
-              padding: "10px 20px",
-              marginTop: "20px",
-              backgroundColor: isNextButtonDisabled() ? "gray" : "green",
-              color: "white",
-              border: "none",
-              cursor: isNextButtonDisabled() ? "not-allowed" : "pointer",
-            }}
-          >
+            >
             Submit
           </button>
+
         </div>
       )}
-
+  
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-        {/* <button
-          onClick={handlePrev}
-          disabled={step === 1}
-          style={{ padding: "10px 20px" }}
-        >
-          Previous
-        </button> */}
         {step !== 1 && (
-          <button
-            onClick={handlePrev}
-            disabled={step === 1}
-            style={{ padding: "10px 20px" }}
-            >
+          <button onClick={handlePrev} disabled={step === 1}>
             Previous
-        </button>
+          </button>
         )}
         {step !== 3 && (
-          <button
-            onClick={handleNext}
-            disabled={isNextButtonDisabled()}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: isNextButtonDisabled() ? "gray" : "blue",
-              color: "white",
-              border: "none",
-              cursor: isNextButtonDisabled() ? "not-allowed" : "pointer",
-            }}
-          >
+          <button onClick={handleNext} disabled={isNextButtonDisabled()}>
             Next
           </button>
         )}
       </div>
     </div>
   );
+   
 }

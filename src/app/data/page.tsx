@@ -63,8 +63,18 @@ export default function DataPage() {
 
   return (
     <div>
-      <header style={{ display: "flex", justifyContent: "space-between", padding: "10px", backgroundColor: "#f0f0f0" }}>
-        <button onClick={() => router.push("/")} style={{ padding: "8px 12px", cursor: "pointer" }}>
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "10px",
+          backgroundColor: "#f0f0f0",
+        }}
+      >
+        <button
+          onClick={() => router.push("/")}
+          style={{ padding: "8px 12px", cursor: "pointer" }}
+        >
           Back
         </button>
       </header>
@@ -72,21 +82,39 @@ export default function DataPage() {
       {formData.length === 0 ? (
         <p>No submissions found.</p>
       ) : (
-        <div className="grid-container">
-          {formData.map((entry, index) => (
-            <div key={index} className="grid-item">
-              <div><strong>Email:</strong> {entry.formData.email || "N/A"}</div>
-              <div><strong>Password:</strong> {entry.formData.password || "N/A"}</div>
-              <div>
-                <strong>Address:</strong> {entry.formData.street || "N/A"}, {entry.formData.city || "N/A"}, {entry.formData.state || "N/A"}, {entry.formData.zip || "N/A"}
-              </div>
-              <div><strong>Bio:</strong> {entry.formData.bio || "N/A"}</div>
-              <div><strong>Birthdate:</strong> {entry.formData.birthdate || "N/A"}</div>
-              <hr />
-            </div>
-          ))}
-        </div>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Email</th>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Password</th>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Address</th>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Bio</th>
+              <th style={{ border: "1px solid #ddd", padding: "8px" }}>Birthdate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {formData.map((entry, index) => (
+              <tr key={index}>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {entry.formData.email || "N/A"}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {entry.formData.password || "N/A"}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {`${entry.formData.street || "N/A"}, ${entry.formData.city || "N/A"}, ${entry.formData.state || "N/A"}, ${entry.formData.zip || "N/A"}`}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {entry.formData.bio || "N/A"}
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  {entry.formData.birthdate || "N/A"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
-  );
+  );  
 }
