@@ -23,6 +23,7 @@ button {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.25s ease;
+  /* padding: 8px 12px; */
 }
 
 button:hover {
@@ -82,4 +83,42 @@ button.submit:hover {
 
 .progress-line.active {
   background-color: var(--green-hover);
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+p {
+  font-size: 1rem;
+}
+
+tr {
+  background-color: #fff;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
 }

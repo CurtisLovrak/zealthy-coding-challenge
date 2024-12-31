@@ -17,6 +17,7 @@ export default function WizardPage() {
     zip: "",
     birthdate: "",
     bio: "",
+    createdAt: ""
   });
   const [selectedSteps, setSelectedSteps] = useState<{ [key: number]: { [key: string]: boolean } }>({});
 
@@ -68,11 +69,16 @@ export default function WizardPage() {
 
   const handleSubmit = async () => {
     try {
-      const currentTimestamp = new Date().toISOString();
+      const currentTimestamp = new Date().toISOString();  // Get the current timestamp
+      formData.createdAt = currentTimestamp; 
+      // const currentTimestamp = new Date().toISOString();
       const response = await fetch("http://localhost:5000/api/submit-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ formData, createdAt: currentTimestamp }),
+        body: JSON.stringify({ 
+          formData
+          // createdAt: currentTimestamp 
+        }),
       });
 
       const result = await response.json();
@@ -89,6 +95,7 @@ export default function WizardPage() {
           zip: "",
           birthdate: "",
           bio: "",
+          createdAt: ""
         });
         setSelectedSteps({});
         setStep(1);
@@ -101,14 +108,7 @@ export default function WizardPage() {
 
   return (
     <div>
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "10px",
-          backgroundColor: "#f0f0f0",
-        }}
-      >
+      <header>
         <button onClick={() => router.push("/admin")}>Admin Controls</button>
         <button onClick={() => router.push("/data")}>Data Submitted</button>
       </header>

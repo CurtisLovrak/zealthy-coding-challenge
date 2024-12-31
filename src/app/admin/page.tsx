@@ -1,5 +1,6 @@
 "use client";
 
+import "../globals.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -47,7 +48,6 @@ export default function AdminPage() {
     const page2FieldsSelected = Object.values(selectedOptions[2] || {}).filter(Boolean).length;
     const page3FieldsSelected = Object.values(selectedOptions[3] || {}).filter(Boolean).length;
 
-    // Disable the button if any page has no fields selected or has more than 2 fields selected
     return !(page2FieldsSelected >= 1 && page2FieldsSelected <= 2) ||
       !(page3FieldsSelected >= 1 && page3FieldsSelected <= 2);
   };
@@ -56,7 +56,7 @@ export default function AdminPage() {
     <div>
       <h1>Admin Page</h1>
       <p>Select page elements for the onboarding flow:</p>
-
+  
       <div>
         <h3>About Me Section</h3>
         <label>
@@ -76,7 +76,7 @@ export default function AdminPage() {
           Present on Page 3
         </label>
       </div>
-
+  
       <div>
         <h3>Address Collection</h3>
         <label>
@@ -96,7 +96,7 @@ export default function AdminPage() {
           Present on Page 3
         </label>
       </div>
-
+  
       <div>
         <h3>Birthdate Selection</h3>
         <label>
@@ -116,21 +116,14 @@ export default function AdminPage() {
           Present on Page 3
         </label>
       </div>
-
+  
       <button
+        className="button"
         onClick={handleSave}
         disabled={isSaveButtonDisabled()}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          backgroundColor: isSaveButtonDisabled() ? "gray" : "blue",
-          color: "white",
-          border: "none",
-          cursor: isSaveButtonDisabled() ? "not-allowed" : "pointer",
-        }}
       >
         Save Options
       </button>
     </div>
-  );
+  );  
 }

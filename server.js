@@ -13,11 +13,12 @@ export const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const uri = process.env.MONGODB_URI;
+// const uri = process.env.MONGODB_URI;
+const uri = "mongodb+srv://admin:yOH9GivculoxOVzP@form-page-db.xzkqp.mongodb.net/?retryWrites=true&w=majority&appName=Form-page-DB"
 
-if (!process.env.MONGODB_URI) {
-    throw new Error ('missing db uri')
-}
+// if (!process.env.MONGODB_URI) {
+//     throw new Error ('missing db uri')
+// }
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -44,23 +45,23 @@ app.post("/api/submit-form", async (req, res) => {
       const database = client.db("FormPageDB");
       const collection = database.collection("formData");
 
-      const existingData = await collection.findOne({ "formData.email": formData.email });
+      // const existingData = await collection.findOne({ "formData.email": formData.email });
 
-      if (existingData) {
-          await collection.updateOne(
-              { "formData.email": formData.email },
-              {
-                  $set: {
-                      formData,
-                      selectedSteps,
-                  },
-              }
-          );
-          res.status(200).json({ message: "Form data updated successfully!" });
-      } else {
+      // if (existingData) {
+      //     await collection.updateOne(
+      //         { "formData.email": formData.email },
+      //         {
+      //             $set: {
+      //                 formData,
+      //                 selectedSteps,
+      //             },
+      //         }
+      //     );
+      //     res.status(200).json({ message: "Form data updated successfully!" });
+      // } else {
           const result = await collection.insertOne({ formData, selectedSteps });
           res.status(201).json({ message: "Form data saved successfully", id: result.insertedId });
-      }
+      // }
   } catch (error) {
       console.error("Error saving form data:", error);
       res.status(500).json({ message: "Failed to save form data" });
@@ -90,6 +91,17 @@ app.get("/api/submit-form", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving form data:", error);
     res.status(500).json({ message: "Failed to retrieve form data" });
+  }
+});
+
+app.delete("/api/delete-form/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await FormDataModel.deleteOne({ email: id });
+
+    res.status(200).json({ message: "Record deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting record", error: error });
   }
 });
 
