@@ -131,7 +131,6 @@ export default function AdminPage() {
       >
         Save Options
       </button>
-      <pre>{JSON.stringify(selectedOptions, null, 2)}</pre>
     </div>
   );
 }

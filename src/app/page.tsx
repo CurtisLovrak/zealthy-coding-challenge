@@ -100,9 +100,11 @@ export default function WizardPage() {
   return (
     <div>
       <header style={{ display: "flex", justifyContent: "space-between", padding: "10px", backgroundColor: "#f0f0f0" }}>
-        <h1>Wizard App</h1>
         <button onClick={() => router.push("/admin")} style={{ padding: "8px 12px", cursor: "pointer" }}>
           Admin Controls
+        </button>
+        <button onClick={() => router.push("/data")} style={{ padding: "8px 12px", cursor: "pointer" }}>
+          Data Submitted
         </button>
       </header>
 
@@ -238,13 +240,22 @@ export default function WizardPage() {
       )}
 
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-        <button
+        {/* <button
           onClick={handlePrev}
           disabled={step === 1}
           style={{ padding: "10px 20px" }}
         >
           Previous
+        </button> */}
+        {step !== 1 && (
+          <button
+            onClick={handlePrev}
+            disabled={step === 1}
+            style={{ padding: "10px 20px" }}
+            >
+            Previous
         </button>
+        )}
         {step !== 3 && (
           <button
             onClick={handleNext}

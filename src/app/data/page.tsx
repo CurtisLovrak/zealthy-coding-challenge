@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+// import { port, endpoint } from "../../../server"
 
 interface FormData {
   email: string;
@@ -21,11 +23,14 @@ export default function DataPage() {
   const [formData, setFormData] = useState<FormDataEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFormData = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/submit-form");
+        // const response = await fetch(`http://localhost:${port}/${endpoint.submitForm}`);
+
         const json = await response.json();
 
         if (response.ok) {
@@ -58,6 +63,11 @@ export default function DataPage() {
 
   return (
     <div>
+      <header style={{ display: "flex", justifyContent: "space-between", padding: "10px", backgroundColor: "#f0f0f0" }}>
+        <button onClick={() => router.push("/")} style={{ padding: "8px 12px", cursor: "pointer" }}>
+          Back
+        </button>
+      </header>
       <h1>Previous Submissions</h1>
       {formData.length === 0 ? (
         <p>No submissions found.</p>

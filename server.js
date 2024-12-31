@@ -4,18 +4,20 @@ import cors from "cors";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 const app = express();
-const port = 5000;
+export const port = process.env.PORT || 5000;
+
+// export const endpoint = {
+//   submitForm: "/api/submit-form",
+// };
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// const uri = process.env.MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
-const uri = "mongodb+srv://admin:yOH9GivculoxOVzP@form-page-db.xzkqp.mongodb.net/?retryWrites=true&w=majority&appName=Form-page-DB"
-
-// if (!process.env.MONGODB_URI) {
-//     throw new Error ('missing db uri')
-// }
+if (!process.env.MONGODB_URI) {
+    throw new Error ('missing db uri')
+}
 
 const client = new MongoClient(uri, {
   serverApi: {
