@@ -29,7 +29,8 @@ export default function DataPage() {
   useEffect(() => {
     const fetchFormData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/submit-form");
+        // const response = await fetch("http://localhost:5000/api/submit-form");
+        const response = await fetch("api/submit-form");
         const json = await response.json();
 
         if (response.ok) {

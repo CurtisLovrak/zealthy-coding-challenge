@@ -71,7 +71,8 @@ export default function WizardPage() {
     try {
       const currentTimestamp = new Date().toISOString();
       formData.createdAt = currentTimestamp; 
-      const response = await fetch("http://localhost:5000/api/submit-form", {
+      // const response = await fetch("http://localhost:5000/api/submit-form", {
+        const response = await fetch("api/submit-form", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
