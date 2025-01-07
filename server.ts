@@ -2,19 +2,16 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { MongoClient, ServerApiVersion } from "mongodb";
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env.local' });
 
 const app = express();
-export const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// const uri = process.env.MONGODB_URI;
-const uri = "mongodb+srv://admin:yOH9GivculoxOVzP@form-page-db.xzkqp.mongodb.net/?retryWrites=true&w=majority&appName=Form-page-DB"
-
-// if (!process.env.MONGODB_URI) {
-//     throw new Error ('missing db uri')
-// }
+export const port = process.env.PORT
+const uri = process.env.MONGODB_URI!;
 
 const client = new MongoClient(uri, {
   serverApi: {
