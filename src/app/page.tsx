@@ -22,6 +22,18 @@ export default function WizardPage() {
   const [selectedSteps, setSelectedSteps] = useState<{ [key: number]: { [key: string]: boolean } }>({});
 
   useEffect(() => {
+    const savedSelectedSteps = localStorage.getItem("admin-selected-options");
+    if (savedSelectedSteps) {
+      setSelectedSteps(JSON.parse(savedSelectedSteps));
+    } else {
+      setSelectedSteps({
+        2: { aboutMe: false, address: true, birthdate: false },
+        3: { aboutMe: false, address: false, birthdate: true },
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     const savedStep = localStorage.getItem("wizard-step");
     if (savedStep) setStep(Number(savedStep));
 
